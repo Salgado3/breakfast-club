@@ -42,7 +42,7 @@ module.exports = {
 
         { $addToSet: { likedPhotos: req.params.id } }
       );
-      res.redirect("back");
+      res.redirect("feed.ejs");
     } catch (err) {
       console.log(err);
     }

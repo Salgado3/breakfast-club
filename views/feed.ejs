@@ -15,10 +15,10 @@
       <!-- Like button feature form and button -->
       <form
         class="btn btn-secondary fa fa-heart col-1"
-        action="posts/likePost<%= posts._id %>?_method=PUT"
+        action="/post/likePost/<%= posts.id %>?_method=PUT"
         method="POST"
       >
-        <button class="btn btn-primary glyphicon glyphicon-fire" type="submit">
+      <button class="btn btn-primary fa fa-heart" type="submit"></button>
           Not working like button
         </button>
       </form>
