@@ -6,7 +6,9 @@ module.exports = {
   getFeed: async (req, res) => {
     try {
       const posts = await Post.find().lean();
-      res.render("feed.ejs", { posts });
+      res.render("feed.ejs", {
+        posts,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -31,18 +33,43 @@ module.exports = {
       console.log(err);
     }
   },
-  likedPostsFeed: (req, res) => {
-    res.render("likedPosts.ejs");
+  likedPostsFeed: async (req, res) => {
+    const posts = await Post.find();
+    res.render("likedPosts.ejs", posts);
   },
 
   likePost: async (req, res) => {
     try {
-      await User.findOneAndUpdate(
-        { _id: req.user.id },
+      const user = await User.findOne({ _id: req.user.id });
+      if (user.likedPhotos.includes(req.params.id)) {
+        await User.findOneAndUpdate(
+          {
+            _id: req.user.id,
+          },
 
-        { $addToSet: { likedPhotos: req.params.id } }
-      );
-      res.redirect("feed.ejs");
+          {
+            $pull: {
+              likedPhotos: req.params.id,
+            },
+          }
+        );
+        console.log("includes");
+      } else {
+        await User.findOneAndUpdate(
+          {
+            _id: req.user.id,
+          },
+
+          {
+            $addToSet: {
+              likedPhotos: req.params.id,
+            },
+          }
+        );
+        console.log("no includes");
+      }
+
+      res.redirect("back");
     } catch (err) {
       console.log(err);
     }
